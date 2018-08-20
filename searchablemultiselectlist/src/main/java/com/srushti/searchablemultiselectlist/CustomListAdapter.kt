@@ -1,12 +1,12 @@
 package com.srushti.searchablemultiselectlist
 
 import android.content.Context
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckedTextView
-import android.widget.TextView
 
 
 /**
@@ -25,22 +25,42 @@ class CustomListAdapter<T:ListItem>(context: Context?,
 
     private var mData = ArrayList<T>()
     private var mSource = ArrayList<T>()
+    private var mSparseBooleanArray: SparseBooleanArray
 
     init {
         mData = objects as ArrayList<T>
         mSource = ArrayList(mData)
+        mSparseBooleanArray = SparseBooleanArray()
     }
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view: View
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         view = inflater.inflate(resource, null)
         var textView = view.findViewById<CheckedTextView>(textViewResourceId)
-        textView.text = getItem(position).getDisplayText()
+        val item = getItem(position)
+        textView.text = item.getDisplayText()
+        textView.tag = position
 
+        textView.isChecked = item.isSelected
+        textView.setOnClickListener { view: View ->
+            mSparseBooleanArray.put(view.getTag() as Int, (view as CheckedTextView).isChecked)
+        }
         return view
     }
 
+    fun getSelectedItems(): ArrayList<T> {
+        var tempArr: ArrayList<T> = ArrayList()
+
+        for (i in mSource.indices) {
+            if (mSparseBooleanArray.get(i)) {
+                tempArr.add(mSource.get(i))
+            }
+        }
+
+        return tempArr
+    }
     override fun getItem(position: Int): T {
         return mData.get(position)
     }
@@ -60,7 +80,7 @@ class CustomListAdapter<T:ListItem>(context: Context?,
 
         mData = ArrayList()
         mSource.forEach {
-            if (it.toString().toLowerCase().contains(search.toLowerCase())) {
+            if (it.getDisplayText().toLowerCase().contains(search.toLowerCase())) {
                 mData.add(it)
             }
         }

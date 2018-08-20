@@ -3,10 +3,10 @@ package com.srushti.searchablemultiselectlist
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.widget.SearchView.OnQueryTextListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_custom_list.*
 
@@ -64,5 +64,9 @@ class CustomListFragment : DialogFragment() {
 
         mCustomListAdapter = CustomListAdapter(context, R.layout.custom_list_row_item, android.R.id.text1, arrData)
         my_list_view.adapter = mCustomListAdapter
+
+        my_list_view.setOnClickListener { view: View ->
+            Log.e("SP", "Selected Data ----> " + mCustomListAdapter.getSelectedItems())
+        }
     }
 }

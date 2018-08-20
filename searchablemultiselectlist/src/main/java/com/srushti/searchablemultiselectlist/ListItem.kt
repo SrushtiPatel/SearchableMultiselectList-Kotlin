@@ -9,8 +9,8 @@ package com.srushti.searchablemultiselectlist
  * @since 20/8/18 5:52 PM
  */
 
-public abstract class ListItem() {
-    var isSelected:Boolean = false
+interface ListItem {
+    var isSelected: Boolean
 
     abstract fun getDisplayText() : String
 }
