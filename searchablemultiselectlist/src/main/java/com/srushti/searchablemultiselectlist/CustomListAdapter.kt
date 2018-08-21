@@ -1,16 +1,18 @@
 package com.srushti.searchablemultiselectlist
 
 import android.content.Context
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.CheckedTextView
 
 
 /**
- * <h1>com.srushti.searchablemultiselectlist</h1>
+ * <h1>CustomListAdapter</h1>
  *
  *
  * @author Srushti Patel (srushtip@meditab.com) Meditab Software Inc.
@@ -25,12 +27,33 @@ class CustomListAdapter<T:ListItem>(context: Context?,
 
     private var mData = ArrayList<T>()
     private var mSource = ArrayList<T>()
-    private var mSparseBooleanArray: SparseBooleanArray
+    private var mSelectedValue = ArrayList<T>()
+//    private var mSparseBooleanArray: SparseBooleanArray
 
     init {
         mData = objects as ArrayList<T>
         mSource = ArrayList(mData)
-        mSparseBooleanArray = SparseBooleanArray()
+//        mSparseBooleanArray = SparseBooleanArray()
+
+    }
+
+    fun setSelectedValue(pAlSelectedItem : ArrayList<T>) {
+        mSelectedValue = pAlSelectedItem
+
+        setSelectedValues()
+    }
+    private fun setSelectedValues() {
+        mSource.indices.forEach { source ->
+//            mSparseBooleanArray.put(it.listId, mSelectedValue.contains(it))
+            mSelectedValue.forEach{ selected ->
+//                source.isSelected = source.listId.contentEquals(selected.listId)
+                if(mSource.get(source).listId.equals(selected.listId)){
+                    mSource.get(source).isSelected = true
+                    mData.get(source).isSelected = true
+//                    break
+                }
+            }
+        }
     }
 
 
@@ -39,28 +62,69 @@ class CustomListAdapter<T:ListItem>(context: Context?,
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         view = inflater.inflate(resource, null)
         var textView = view.findViewById<CheckedTextView>(textViewResourceId)
-        val item = getItem(position)
+        var item = getItem(position)
         textView.text = item.getDisplayText()
         textView.tag = position
 
+
         textView.isChecked = item.isSelected
+        view.isSelected = textView.isChecked
+
+        view.tag = position
+
+
+
         textView.setOnClickListener { view: View ->
-            mSparseBooleanArray.put(view.getTag() as Int, (view as CheckedTextView).isChecked)
+            Log.e("SP", "Clicked");
+            val checkedTextView = view as CheckedTextView
+            checkedTextView.toggle()
+            var item = getItem(view.tag as Int)
+            item.isSelected = checkedTextView.isChecked
+            mSource.get(getSourceItemPosition(item.listId)).isSelected = checkedTextView.isChecked
+//            notifyDataSetChanged()
         }
+
+//        view.setOnClickListener { view: View ->
+//            val position:Int = view.tag as Int
+//            val checked = (view as CheckedTextView).isChecked
+////            mSparseBooleanArray.put(position, checked)
+//            mData.get(position).isSelected = checked
+//
+//        }
         return view
+    }
+
+    private fun getSourceItemPosition(listId: String) : Int {
+        mSource.indices.forEach{
+            if(listId.equals(mSource.get(it).listId)){
+                return it
+            }
+        }
+        return 0
+    }
+
+    private fun findItem(item: T): Boolean {
+        mSource.forEach{
+            if(item.listId.equals(it.listId)){
+                return true
+            }
+        }
+        return false
     }
 
     fun getSelectedItems(): ArrayList<T> {
         var tempArr: ArrayList<T> = ArrayList()
 
-        for (i in mSource.indices) {
-            if (mSparseBooleanArray.get(i)) {
-                tempArr.add(mSource.get(i))
-            }
+        mSource.indices.forEach { i ->
+//            if (mSparseBooleanArray.get(i)) {
+//                tempArr.add(mSource.get(i))
+//            }
         }
 
-        return tempArr
+        return mSelectedValue
     }
+
+
     override fun getItem(position: Int): T {
         return mData.get(position)
     }

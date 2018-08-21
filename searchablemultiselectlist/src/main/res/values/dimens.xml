@@ -2,4 +2,5 @@
 <resources>
     <dimen name="scale_8dp">8dp</dimen>
     <dimen name="scale_16dp">16dp</dimen>
+    <dimen name="scale_4dp">4dp</dimen>
 </resources>

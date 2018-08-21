@@ -21,6 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_view"
-        app:layout_id="@layout/custom_list_row_item"
+        app:layout_id="@layout/custom_list_row_item_new"
         />
 </android.support.constraint.ConstraintLayout>
