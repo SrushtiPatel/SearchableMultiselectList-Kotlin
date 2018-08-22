@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MSListView">
+    <declare-styleable name="MultiSelectRecyclerView">
         <attr name="layout_id" format="reference"/>
+        <attr name="text_view_id" format="integer" />
     </declare-styleable>
 </resources>

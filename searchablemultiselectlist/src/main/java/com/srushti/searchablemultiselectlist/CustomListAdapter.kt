@@ -2,12 +2,10 @@ package com.srushti.searchablemultiselectlist
 
 import android.content.Context
 import android.util.Log
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.CheckedTextView
 
 
@@ -40,7 +38,7 @@ class CustomListAdapter<T:ListItem>(context: Context?,
     fun setSelectedValue(pAlSelectedItem : ArrayList<T>) {
         mSelectedValue = pAlSelectedItem
 
-        setSelectedValues()
+//        setSelectedValues()
     }
     private fun setSelectedValues() {
         mSource.indices.forEach { source ->
@@ -67,9 +65,10 @@ class CustomListAdapter<T:ListItem>(context: Context?,
         textView.tag = position
 
 
-        textView.isChecked = item.isSelected
-        view.isSelected = textView.isChecked
+        textView.isChecked = findItem(item)
+//        view.isSelected = textView.isChecked
 
+        Log.e("SP", "Checked--> " + position + " --> " + textView.isChecked)
         view.tag = position
 
 
@@ -79,8 +78,7 @@ class CustomListAdapter<T:ListItem>(context: Context?,
             val checkedTextView = view as CheckedTextView
             checkedTextView.toggle()
             var item = getItem(view.tag as Int)
-            item.isSelected = checkedTextView.isChecked
-            mSource.get(getSourceItemPosition(item.listId)).isSelected = checkedTextView.isChecked
+
 //            notifyDataSetChanged()
         }
 

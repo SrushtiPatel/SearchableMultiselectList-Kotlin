@@ -75,6 +75,8 @@ class MultiSelectListAdapter<T : ListItem>(val context: Context?,
 
     fun setSelectedValue(pAlSelectedItem: ArrayList<T>) {
         mSelectedValue = pAlSelectedItem
+
+
     }
 
     fun getSelectedItems(): ArrayList<T> {

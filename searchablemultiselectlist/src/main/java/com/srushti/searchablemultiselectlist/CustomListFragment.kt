@@ -2,12 +2,9 @@ package com.srushti.searchablemultiselectlist
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import kotlinx.android.synthetic.main.fragment_custom_list.*
 
 
 class CustomListFragment : DialogFragment() {
@@ -45,7 +42,7 @@ class CustomListFragment : DialogFragment() {
 
 
     private fun setSearchView() {
-        search_view.setOnQueryTextListener(object : OnQueryTextListener {
+        /*search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(pStrInput: String?): Boolean {
                 mCustomListAdapter.filter(pStrInput)
                 return true
@@ -54,12 +51,12 @@ class CustomListFragment : DialogFragment() {
             override fun onQueryTextSubmit(pStrInput: String?): Boolean {
                 return true
             }
-        })
+        })*/
     }
 
     private fun setListAdapter() {
 
-        my_list_view.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+//        my_list_view.choiceMode = ListView.CHOICE_MODE_MULTIPLE
 
         mCustomListAdapter = CustomListAdapter(context, R.layout.custom_list_row_item, android.R.id.text1, arrData)
         var selectedItems = ArrayList<DmPerson>()
@@ -67,7 +64,7 @@ class CustomListFragment : DialogFragment() {
         selectedItems.add(DmPerson("3", "Deepali"))
 
         mCustomListAdapter.setSelectedValue(selectedItems)
-        my_list_view.adapter = mCustomListAdapter
+//        my_list_view.adapter = mCustomListAdapter
 
 
 //        my_list_view.setOnItemClickListener { adapterView: View, view, position: Int, l ->
