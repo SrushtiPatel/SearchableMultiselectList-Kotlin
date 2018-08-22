@@ -2,8 +2,8 @@ package com.srushti.searchablemultiselectlist
 
 import android.content.Context
 import android.content.res.XmlResourceParser
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.widget.ListView
 
 
 /**
@@ -19,7 +19,7 @@ class MSListView @JvmOverloads constructor(
         mAttrs: AttributeSet? = null,
         defStyleAttr: Int = 0,
         defStyleRes: Int = 0
-        ) : ListView(mContext, mAttrs, defStyleAttr, defStyleRes) {
+) : RecyclerView(mContext, mAttrs, defStyleAttr) {
 
     private lateinit var mIntLayoutId: XmlResourceParser
 
