@@ -44,7 +44,11 @@ class MainActivity : AppCompatActivity() {
         selectedItems.add(DmPerson("3", "Deepali"))
 
 
-        val newFragment = MultiSelectListFragment.newInstance(arrData, selectedItems)
+//        val newFragment = MultiSelectListFragment.newInstance(arrData, selectedItems)
+        val newFragment = MultiSelectListFragment<DmPerson>()
+        newFragment.setDataCollection(arrData)
+        newFragment.setSelectedItemCollection(selectedItems)
+
         newFragment.setItemSelectedListener(object : MultiSelectListFragment.ListItemSelectionListener {
             override fun onListItemSelected(pSelectedItem: ArrayList<Any>) {
                 Log.e("SP", "Selected items---> " + pSelectedItem.toString())

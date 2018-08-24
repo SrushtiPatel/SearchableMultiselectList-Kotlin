@@ -38,12 +38,31 @@ class MultiSelectRecyclerView @JvmOverloads constructor(
             typedArray.recycle()
         }
 
-        LayoutInflater.from(mContext).inflate(mIntLayoutId, this, true)
+//        LayoutInflater.from(mContext).inflate(mIntLayoutId, this, true)
+        LayoutInflater.from(mContext).inflate(R.layout.sms_layout, this, true)
 
-        mDisplayTextView = findViewById(mTextViewId)
+//        mDisplayTextView = findViewById(mTextViewId)
+        mDisplayTextView = findViewById(R.id.tv_selected_values)
 
         mDisplayTextView.setOnClickListener { view: View ->
 
+            //            loadListFragment()
+
         }
     }
+
+//    private val arrData: ArrayList<Any>
+//
+//    private fun loadListFragment() {
+//
+//        val newFragment = MultiSelectListFragment.newInstance(arrData, selectedItems)
+//        newFragment.setItemSelectedListener(object : MultiSelectListFragment.ListItemSelectionListener {
+//            override fun onListItemSelected(pSelectedItem: ArrayList<Any>) {
+//                Log.e("SP", "Selected items---> " + pSelectedItem.toString())
+//                tv_names.text = pSelectedItem.toString()
+//            }
+//
+//        }
+
+
 }

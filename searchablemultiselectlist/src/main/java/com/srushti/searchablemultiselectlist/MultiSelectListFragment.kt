@@ -13,7 +13,7 @@ import android.view.Window
 import android.widget.TextView
 
 
-class MultiSelectListFragment : DialogFragment() {
+class MultiSelectListFragment<T> : DialogFragment() {
 
     val KEY_LIST_SOURCE: String = "source_data"
     val KEY_SELECTED_DATA: String = "selected_data"
@@ -22,9 +22,9 @@ class MultiSelectListFragment : DialogFragment() {
 
     private lateinit var mDialog: AlertDialog
 
-    private lateinit var arrData: ArrayList<DmPerson>
-    private lateinit var selectedItems: ArrayList<DmPerson>
-    private lateinit var mCustomListAdapter: MultiSelectListAdapter<DmPerson>
+    private lateinit var arrData: ArrayList<T>
+    private lateinit var selectedItems: ArrayList<T>
+    private lateinit var mCustomListAdapter: MultiSelectListAdapter<T>
     private lateinit var mItemSelectionListener: ListItemSelectionListener
 
     lateinit var my_list_view: MSListView
@@ -43,11 +43,11 @@ class MultiSelectListFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(pSourceData: ArrayList<DmPerson>, pSelectedValues: ArrayList<DmPerson>) =
-                MultiSelectListFragment().apply {
+        fun <T> newInstance(pSourceData: ArrayList<T>, pSelectedValues: ArrayList<T>) =
+                MultiSelectListFragment<T>().apply {
                     arguments = Bundle().apply {
-                        putParcelableArrayList(KEY_LIST_SOURCE, pSourceData)
-                        putParcelableArrayList(KEY_SELECTED_DATA, pSelectedValues)
+                        //                        putParcelableArrayList(KEY_LIST_SOURCE, pSourceData)
+//                        putParcelableArrayList(KEY_SELECTED_DATA, pSelectedValues)
                     }
                 }
 
@@ -135,9 +135,17 @@ class MultiSelectListFragment : DialogFragment() {
     }
 
     private fun setBundleParams() {
-        arrData = arguments?.getParcelableArrayList(KEY_LIST_SOURCE) ?: ArrayList()
-        selectedItems = arguments?.getParcelableArrayList(KEY_SELECTED_DATA) ?: ArrayList()
+//        arrData = arguments?.getParcelableArrayList(KEY_LIST_SOURCE) ?: ArrayList()
+//        selectedItems = arguments?.getParcelableArrayList(KEY_SELECTED_DATA) ?: ArrayList()
 
+    }
+
+    fun setDataCollection(pArrDataSource: ArrayList<T>) {
+        arrData = pArrDataSource
+    }
+
+    fun setSelectedItemCollection(pArrSelectedItem: ArrayList<T>) {
+        selectedItems = pArrSelectedItem
     }
 
     private fun setSearchView() {

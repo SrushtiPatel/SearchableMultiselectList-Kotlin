@@ -16,10 +16,10 @@ import kotlinx.android.synthetic.main.custom_list_row_item_new.view.*
  * @since 20/8/18 6:35 PM
  */
 
-class MultiSelectListAdapter<T>(val context: Context?,
-                                val resource: Int,
-                                objects: ArrayList<T>?
-) : RecyclerView.Adapter<MultiSelectListAdapter.MyViewHolder>() {
+class MultiSelectListAdapterExtended<T : ListItem>(val context: Context?,
+                                                   val resource: Int,
+                                                   objects: ArrayList<T>?
+) : RecyclerView.Adapter<MultiSelectListAdapterExtended.MyViewHolder>() {
 
     private var mData = ArrayList<T>()
     private var mSource = ArrayList<T>()
@@ -30,7 +30,7 @@ class MultiSelectListAdapter<T>(val context: Context?,
         mSource = ArrayList(mData)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, pViewType: Int): MultiSelectListAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, pViewType: Int): MultiSelectListAdapterExtended.MyViewHolder {
 
         val sView = LayoutInflater.from(context).inflate(resource, parent, false)
         return MyViewHolder(sView)
@@ -40,10 +40,10 @@ class MultiSelectListAdapter<T>(val context: Context?,
         return mData.size
     }
 
-    override fun onBindViewHolder(pViewHolder: MultiSelectListAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(pViewHolder: MultiSelectListAdapterExtended.MyViewHolder, position: Int) {
 
         var listItem = getItem(position)
-        pViewHolder.mTextView.text = listItem.toString()
+        pViewHolder.mTextView.text = listItem.getDisplayText()
 
         pViewHolder.mIvSelect.visibility = if (isSelected(listItem)) View.VISIBLE else View.INVISIBLE
 
@@ -64,14 +64,13 @@ class MultiSelectListAdapter<T>(val context: Context?,
     }
 
     private fun isSelected(item: T): Boolean {
-//        mSelectedValue.forEach { selected ->
-//            if (item.listId.equals(selected.listId)) {
-//                return true
-//            }
-//        }
-        return mSelectedValue.contains(item)
+        mSelectedValue.forEach { selected ->
+            if (item.listId.equals(selected.listId)) {
+                return true
+            }
+        }
 
-//        return false
+        return false
     }
 
     fun setSelectedValue(pAlSelectedItem: ArrayList<T>) {
@@ -104,7 +103,7 @@ class MultiSelectListAdapter<T>(val context: Context?,
         }
 
         mSource.forEach {
-            if (it.toString().toLowerCase().contains(search.toLowerCase())) {
+            if (it.getDisplayText().toLowerCase().contains(search.toLowerCase())) {
                 mData.add(it)
             }
         }
