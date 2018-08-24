@@ -27,11 +27,11 @@ class MultiSelectRecyclerView @JvmOverloads constructor(
 
     private lateinit var mIntLayoutId: XmlResourceParser
     private var mTextViewId: Int = 0
-    lateinit var mDisplayTextView: TextView
+    var mDisplayTextView: TextView
 
     init {
         mAttrs?.let {
-            val typedArray = mContext.obtainStyledAttributes(it, R.styleable.MultiSelectRecyclerView, 0, 0)
+            val typedArray = mContext.obtainStyledAttributes(it, R.styleable.MultiSelectRecyclerView, 0, defStyleRes)
             mIntLayoutId = resources.getLayout(typedArray.getResourceId(R.styleable.MultiSelectRecyclerView_layout_id, 0))
             mTextViewId = typedArray.getResourceId(R.styleable.MultiSelectRecyclerView_text_view_id, 0)
 

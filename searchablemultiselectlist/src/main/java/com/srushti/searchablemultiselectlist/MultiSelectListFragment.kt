@@ -13,7 +13,7 @@ import android.view.Window
 import android.widget.TextView
 
 
-class MultiSelectListFragment<T> : DialogFragment() {
+open class MultiSelectListFragment<E : ListItem> : DialogFragment() {
 
     val KEY_LIST_SOURCE: String = "source_data"
     val KEY_SELECTED_DATA: String = "selected_data"
@@ -22,10 +22,11 @@ class MultiSelectListFragment<T> : DialogFragment() {
 
     private lateinit var mDialog: AlertDialog
 
-    private lateinit var arrData: ArrayList<T>
-    private lateinit var selectedItems: ArrayList<T>
-    private lateinit var mCustomListAdapter: MultiSelectListAdapter<T>
-    private lateinit var mItemSelectionListener: ListItemSelectionListener
+    private var arrData: ArrayList<E> = ArrayList()
+    private var selectedItems: ArrayList<E> = ArrayList()
+    private lateinit var mCustomListAdapter: MultiSelectListAdapterExtended<E>
+    private lateinit var mItemSelectionListener: ListItemSelectionListener<E>
+    private var mStrTitle: String? = null
 
     lateinit var my_list_view: MSListView
     lateinit var tv_done: TextView
@@ -43,7 +44,7 @@ class MultiSelectListFragment<T> : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun <T> newInstance(pSourceData: ArrayList<T>, pSelectedValues: ArrayList<T>) =
+        fun <T : ListItem> newInstance(pSourceData: ArrayList<T>, pSelectedValues: ArrayList<T>) =
                 MultiSelectListFragment<T>().apply {
                     arguments = Bundle().apply {
                         //                        putParcelableArrayList(KEY_LIST_SOURCE, pSourceData)
@@ -111,6 +112,7 @@ class MultiSelectListFragment<T> : DialogFragment() {
 //    }
 
     private fun initializeView() {
+
         setCustomTitle()
         setSearchView()
         setListAdapter()
@@ -127,9 +129,11 @@ class MultiSelectListFragment<T> : DialogFragment() {
 
     private fun setCustomTitle() {
 //        tv_title.text = "Select Name"
+        mStrTitle?.let { getString(R.string.title_select) }
+        tv_title.text = mStrTitle
 
         tv_done.setOnClickListener {
-            mItemSelectionListener?.onListItemSelected(mCustomListAdapter.getSelectedItems() as ArrayList<Any>)
+            mItemSelectionListener.onListItemSelected(mCustomListAdapter.getSelectedItems())
             mDialog?.dismiss()
         }
     }
@@ -140,12 +144,14 @@ class MultiSelectListFragment<T> : DialogFragment() {
 
     }
 
-    fun setDataCollection(pArrDataSource: ArrayList<T>) {
+    public fun setDataCollection(pArrDataSource: ArrayList<E>) {
         arrData = pArrDataSource
+//        notifyListDataChange()
     }
 
-    fun setSelectedItemCollection(pArrSelectedItem: ArrayList<T>) {
+    public fun setSelectedItemCollection(pArrSelectedItem: ArrayList<E>) {
         selectedItems = pArrSelectedItem
+//        notifyListDataChange()
     }
 
     private fun setSearchView() {
@@ -161,7 +167,7 @@ class MultiSelectListFragment<T> : DialogFragment() {
         })
     }
 
-    fun setItemSelectedListener(pListener: ListItemSelectionListener) {
+    fun setItemSelectedListener(pListener: ListItemSelectionListener<E>) {
         mItemSelectionListener = pListener
     }
 
@@ -174,15 +180,9 @@ class MultiSelectListFragment<T> : DialogFragment() {
 //        var selectedItems = ArrayList<DmPerson>()
 //        selectedItems.add(DmPerson("1", "Srushti"))
 //        selectedItems.add(DmPerson("3", "Deepali"))
+        filterSelectedData()
 
-        if (selectedItems.isNotEmpty()) {
-
-            arrData.removeAll(selectedItems)
-            arrData.addAll(0, selectedItems)
-
-        }
-
-        mCustomListAdapter = MultiSelectListAdapter(context, R.layout.custom_list_row_item_new, arrData)
+        mCustomListAdapter = MultiSelectListAdapterExtended(context, R.layout.custom_list_row_item_new, arrData)
         mCustomListAdapter.setSelectedValue(selectedItems)
         my_list_view.adapter = mCustomListAdapter
 
@@ -192,7 +192,74 @@ class MultiSelectListFragment<T> : DialogFragment() {
 //        }
     }
 
-    interface ListItemSelectionListener {
-        fun onListItemSelected(pSelectedItem: ArrayList<Any>)
+    private fun filterSelectedData() {
+        if (selectedItems.isNotEmpty()) {
+
+            arrData.removeAll(selectedItems)
+            arrData.addAll(0, selectedItems)
+
+        }
     }
+
+    private fun notifyListDataChange() {
+        filterSelectedData()
+        mCustomListAdapter.notifyDataSetChanged()
+    }
+
+    fun setSelectedItemCollection(pAlSelectedItemString: List<String>) {
+        selectedItems = ArrayList()
+        pAlSelectedItemString.forEach { itOuter ->
+            arrData.forEach { itInner ->
+                if (itInner.getDisplayText().contentEquals(itOuter)) {
+                    selectedItems.add(itInner)
+                }
+            }
+        }
+    }
+
+    fun buildDisplayString(): String {
+        var sbString = StringBuilder()
+        var bFoundFirst: Boolean = false
+        sbString.append("[")
+        selectedItems.forEach {
+            //            var str : String = "[$it]"
+            if (bFoundFirst) {
+                sbString.append("], [")
+            }
+            bFoundFirst = true
+            sbString.append(it)
+
+        }
+        sbString.append("]")
+
+        return sbString.toString()
+    }
+
+    fun getSelectedItemStringList(): List<String> {
+        val sAlSelectedStrings = ArrayList<String>()
+        selectedItems.forEach {
+            //            var str : String = "[$it]"
+            sAlSelectedStrings.add(it.toString())
+        }
+
+        return sAlSelectedStrings
+    }
+
+    fun getSelectedItemIndexList(): List<Int> {
+        return selectedItems.indices.toList()
+    }
+
+
+    fun setTitle(pStrTitle: String) {
+        mStrTitle = pStrTitle
+    }
+
+
+    interface ListItemSelectionListener<T> {
+        fun onListItemSelected(pSelectedItem: ArrayList<T>)
+    }
+}
+
+private fun Any.forEach(action: (Int) -> Boolean) {
+
 }
